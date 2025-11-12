@@ -2,7 +2,8 @@ import os
 
 os.environ["GRPC_VERBOSITY"] = "ERROR"
 
-from fastapi import FastAPI, APIRouter, UploadFile, File, HTTPException, Form
+import os
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pdf_extractor import ( 
     extract_fields_from_pdf,
@@ -13,21 +14,28 @@ import tempfile
 import traceback
 
 app = FastAPI()
-api_router = APIRouter(prefix="/api")
+
+# Vercel will automatically handle the build process, so we can remove the uvicorn run block.
+# The API will be served at /api/server.py, which becomes the root for the endpoints.
+
+# More secure CORS for production
+origins = [
+    "http://localhost:3000",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@api_router.get("/health")
+@app.get("/health")
 def health():
     return {"status": "ok"}
 
-@api_router.post("/extract-by-category")
+@app.post("/extract-by-category")
 async def extract_by_category(file: UploadFile = File(...), form_type: str = Form(...), category: str = Form(None)):
     if not file.filename:
         raise HTTPException(status_code=400, detail="No file uploaded")
@@ -55,7 +63,7 @@ async def extract_by_category(file: UploadFile = File(...), form_type: str = For
         except Exception:
             pass
 
-@api_router.post("/extract")
+@app.post("/extract")
 async def extract(file: UploadFile = File(...), form_type: str = Form(...), category: str = Form(None), comment: str = Form(None)):
     # Accommodate custom prompts from components like response.js and CustomQuery.js
     custom_prompt = comment
@@ -88,7 +96,7 @@ async def extract(file: UploadFile = File(...), form_type: str = Form(...), cate
             pass
 
 
-@api_router.post("/compare")
+@app.post("/compare")
 async def compare(
     pdf_file: UploadFile = File(...),
     html_file: UploadFile = File(...)
@@ -167,7 +175,7 @@ async def compare(
         if pdf_tmp_path and os.path.exists(pdf_tmp_path):
             os.remove(pdf_tmp_path)
 
-@api_router.post("/compare-pdfs")
+@app.post("/compare-pdfs")
 async def compare_pdfs(
     old_pdf_file: UploadFile = File(...),
     new_pdf_file: UploadFile = File(...),
@@ -207,7 +215,7 @@ async def compare_pdfs(
         if new_tmp_path and os.path.exists(new_tmp_path):
             os.remove(new_tmp_path)
 
-@api_router.post("/verify-revision")
+@app.post("/verify-revision")
 async def verify_revision(
     file: UploadFile = File(...),
     revision_request: str = Form(...),
@@ -250,7 +258,7 @@ async def verify_revision(
         if tmp_path and os.path.exists(tmp_path):
             os.remove(tmp_path)
 
-@api_router.post("/extract-from-html")
+@app.post("/extract-from-html")
 async def extract_from_html(file: UploadFile = File(...)):
     if not file.filename:
         raise HTTPException(status_code=400, detail="No file uploaded")
@@ -273,10 +281,3 @@ async def extract_from_html(file: UploadFile = File(...)):
     except Exception as exc:
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(exc))
-
-app.include_router(api_router)
-
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)

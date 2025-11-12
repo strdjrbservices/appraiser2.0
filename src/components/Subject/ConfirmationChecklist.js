@@ -105,7 +105,7 @@ const ConfirmationChecklist = () => {
     formData.append('revision_request', CHECKLIST_PROMPT);
 
     try {
-      const res = await fetch('http://localhost:8000/compare-pdfs', {
+      const res = await fetch('/api/compare-pdfs', {
         method: 'POST',
         body: formData,
       });

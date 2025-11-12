@@ -85,7 +85,7 @@ const HtmlExtractor = () => {
     formData.append('file', htmlFile);
 
     try {
-      const res = await fetch('http://localhost:8000/extract-from-html', {
+      const res = await fetch('/api/extract-from-html', {
         method: 'POST',
         body: formData,
       });

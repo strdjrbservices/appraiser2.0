@@ -149,7 +149,7 @@ const ResponsePage = () => {
     formData.append('revision_request', revisionText);
 
     try {
-      const res = await fetch('http://localhost:8000/verify-revision', {
+      const res = await fetch('/api/verify-revision', {
         method: 'POST',
         body: formData,
       });

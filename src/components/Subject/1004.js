@@ -1,5 +1,5 @@
 
-import { SubjectInfoCard, EditableField, GridInfoCard, FieldTable, MarketConditionsTable } from './FormComponents';
+import { SubjectInfoCard, EditableField, GridInfoCard, MarketConditionsTable } from './FormComponents';
 import { Button, Stack } from '@mui/material';
 import { ComparableAddressConsistency, CondoCoopProjectsTable } from './subject';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -82,15 +82,6 @@ const Form1004 = ({ data, allData, extractionAttempted, handleDataChange, editin
               <tr key={feature}>
                 <td className="font-medium">{feature}</td>
                 {Object.keys(dataConsistencyFields[feature]).map((source) => {
-                  const values = Object.values(dataConsistencyFields[feature]).map(fieldName => data[fieldName]).filter(Boolean);
-                  let isConsistent = false;
-                  if (values.length > 0) {
-                    const uniqueValues = new Set(values.map(v => String(v).trim()));
-                    if (uniqueValues.size <= 1) {
-                      isConsistent = true;
-                    }
-                  }
-
                   const fieldName = dataConsistencyFields[feature][source];
                   const value = data[fieldName];
                   const isMissing = extractionAttempted && (!value || value === '');

@@ -188,7 +188,7 @@ const Compare = () => {
       }
       formData.append('pdf_file', pdfFile);
       formData.append('html_file', htmlFile);
-      endpoint = 'http://localhost:8000/compare';
+      endpoint = '/api/compare';
     } else { // pdf-pdf
       if (!oldPdfFile || !newPdfFile) {
         setError('Both Old and New PDF files must be provided for this comparison.');
@@ -197,7 +197,7 @@ const Compare = () => {
       }
       formData.append('old_pdf_file', oldPdfFile);
       formData.append('new_pdf_file', newPdfFile);
-      endpoint = 'http://localhost:8000/compare-pdfs';
+      endpoint = '/api/compare-pdfs';
     }
 
     try {
