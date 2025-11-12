@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Subject.css';
-import { GlobalStyles, styled } from '@mui/system';
+import { GlobalStyles } from '@mui/system';
 import InfoIcon from '@mui/icons-material/Info';
 import { Button, Stack, List, ListItem, ListItemButton, ListItemText, FormControl, InputLabel, Select, MenuItem, IconButton, Tooltip, Paper, Box, Typography, LinearProgress, Alert, Snackbar, Fade, CircularProgress, ThemeProvider, CssBaseline, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Grid } from '@mui/material';
 import jsPDF from 'jspdf';
@@ -413,15 +413,15 @@ const SalesComparisonSection = ({ data, salesGridRows, comparableSales, extracti
 
 
 const PromptAnalysis = ({ onPromptSubmit, loading, response, error, submittedPrompt }) => {
-  const [prompt, setPrompt] = useState('');
+  // const [prompt, setPrompt] = useState('');
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (prompt.trim()) {
-      onPromptSubmit(prompt);
-    }
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (prompt.trim()) {
+  //     onPromptSubmit(prompt);
+  //   }
+  // };
 
   const prompt1 = "Verify that the subject property address is consistent across the Subject section, Sales Grid, Location Map, and Aerial Map.\nAlso please confirm subject street, front and rear photo are present and no duplicates.";
   const prompt2 = "Compare the bedroom and bathroom counts between the Improvements section, Sales Grid, and all available floor plans/ sktech/ building sketch and all photos.";
@@ -944,7 +944,6 @@ function Subject() {
     "Finished area above grade Bath(s)", "Square Feet of Gross Living Area Above Grade",
     "Additional features", "Describe the condition of the property",
     "Are there any physical deficiencies or adverse conditions that affect the livability, soundness, or structural integrity of the property? If Yes, describe",
-    "Does the property generally conform to the neighborhood (functional utility, style, condition, use, construction, etc.)? If No, describe",
 
   ];
 
@@ -1112,9 +1111,9 @@ function Subject() {
     { label: "Total # of Comparable Active Listings", fullLabel: "Subject Project Data Total # of Comparable Active Listings" },
     { label: "Months of Unit Supply (Total Listings/Ab.Rate)", fullLabel: "Subject Project Data Months of Unit Supply (Total Listings/Ab.Rate)" },
   ];
-  const condoCoopProjectsFields = [
-    "Are foreclosure sales (REO sales) a factor in the project?", "If yes, indicate the number of REO listings and explain the trends in listings and sales of foreclosed properties.", "Summarize the above trends and address the impact on the subject unit and project.",
-  ];
+  // const condoCoopProjectsFields = [
+  //   "Are foreclosure sales (REO sales) a factor in the project?", "If yes, indicate the number of REO listings and explain the trends in listings and sales of foreclosed properties.", "Summarize the above trends and address the impact on the subject unit and project.",
+  // ];
 
   const imageAnalysisFields = [
     "include bedroom, bed, bathroom, bath, half bath, kitchen, lobby, foyer, living room count with label and photo,please explan and match the floor plan with photo and improvement section, GLA",
@@ -1640,7 +1639,7 @@ function Subject() {
       }
       // Wait for the delay before the next attempt
       if (i < retries - 1) {
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise(resolve => setTimeout(resolve));
         delay *= 2; // Exponential backoff
       }
     }

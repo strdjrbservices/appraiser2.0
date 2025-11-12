@@ -1,11 +1,11 @@
 import React from 'react';
-import { checkPhysicalDeficiencies, checkAssignmentTypeConsistency, checkSubjectFieldsNotBlank } from './generalValidation';
+import {  checkAssignmentTypeConsistency, checkSubjectFieldsNotBlank } from './generalValidation';
 import { checkContractFieldsMandatory, checkFinancialAssistanceInconsistency, checkContractAnalysisConsistency, checkYesNoOnly } from './contractValidation';
 import { checkTaxYear, checkRETaxes, checkSpecialAssessments, checkPUD, checkHOA, checkOfferedForSale, checkAnsi } from './subjectValidation';
 import { checkZoning, checkZoningDescription, checkSpecificZoningClassification, checkHighestAndBestUse, checkFemaInconsistency, checkFemaFieldsConsistency, checkSiteSectionBlank, checkArea, checkYesNoWithComment, checkUtilities } from './siteValidation';
-import { checkHousingPriceAndAge, checkNeighborhoodUsageConsistency, checkSingleChoiceFields, checkNeighborhoodBoundaries, checkNeighborhoodFieldsNotBlank, checkLocation } from './neighborhoodValidation';
+import { checkHousingPriceAndAge, checkNeighborhoodUsageConsistency, checkSingleChoiceFields, checkNeighborhoodBoundaries, checkNeighborhoodFieldsNotBlank } from './neighborhoodValidation';
 import { checkUnits, checkAccessoryUnit, checkNumberOfStories, checkPropertyType, checkConstructionStatusAndReconciliation, checkDesignStyle, checkYearBuilt, checkEffectiveAge, checkAdditionalFeatures, checkPropertyConditionDescription, checkPhysicalDeficienciesImprovements, checkNeighborhoodConformity, checkFoundationType, checkBasementDetails, checkEvidenceOf, checkMaterialCondition, checkHeatingFuel, checkCarStorage, checkImprovementsFieldsNotBlank } from './improvementsValidation';
-import { checkConditionAdjustment, checkBedroomsAdjustment, checkBathsAdjustment, checkQualityOfConstructionAdjustment, checkProximityToSubject, checkSiteAdjustment, checkGrossLivingAreaAdjustment, checkSubjectAddressInconsistency, checkDesignStyleAdjustment, checkFunctionalUtilityAdjustment, checkEnergyEfficientItemsAdjustment, checkPorchPatioDeckAdjustment, checkHeatingCoolingAdjustment, checkDataSourceDOM, checkActualAgeAdjustment, checkLeaseholdFeeSimpleConsistency, checkCompDesignStyle, checkDateOfSale, checkLocationConsistency, checkSalePrice } from './salesComparisonValidation';
+import { checkConditionAdjustment, checkBedroomsAdjustment, checkBathsAdjustment, checkQualityOfConstructionAdjustment, checkProximityToSubject, checkSiteAdjustment, checkGrossLivingAreaAdjustment, checkSubjectAddressInconsistency, checkDesignStyleAdjustment, checkFunctionalUtilityAdjustment, checkEnergyEfficientItemsAdjustment, checkPorchPatioDeckAdjustment, checkHeatingCoolingAdjustment, checkDataSourceDOM, checkActualAgeAdjustment, checkLeaseholdFeeSimpleConsistency, checkDateOfSale, checkLocationConsistency, checkSalePrice } from './salesComparisonValidation';
 import { checkFinalValueConsistency, checkCostApproachDeveloped, checkAppraisalCondition, checkAsOfDate, checkFinalValueBracketing } from './reconciliationValidation';
 import { checkLenderAddressInconsistency, checkLenderNameInconsistency, checkAppraiserFieldsNotBlank } from './appraiserLenderValidation';
 import { checkCostNew, checkSourceOfCostData, checkIndicatedValueByCostApproach, checkCostApproachFieldsNotBlank } from './costApproachValidation';
@@ -14,7 +14,7 @@ import { checkStateRequirements } from './stateValidation';
 import { checkIncomeApproachFieldsNotBlank } from './incomeApproachValidation';
 import { checkPudInformationFieldsNotBlank } from './pudInformationValidation';
 import { checkMarketConditionsFieldsNotBlank } from './marketConditionsValidation';
-import { Tooltip, Box, LinearProgress, IconButton } from '@mui/material';
+import { Tooltip, Box, LinearProgress } from '@mui/material';
 
 
 const HighlightKeywords = ({ text, keywords }) => {
@@ -178,7 +178,6 @@ export const EditableField = ({ fieldPath, value, onDataChange, editingField, se
     'Lender/Client Company Address': [checkLenderAddressInconsistency],
 
     // General Validations
-    'Are there any physical deficiencies or adverse conditions that affect the livability, soundness, or structural integrity of the property? If Yes, describe': [checkPhysicalDeficiencies],
     'Assignment Type': [checkAssignmentTypeConsistency],
 
     // Contract Validations
