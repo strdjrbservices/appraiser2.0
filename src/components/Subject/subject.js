@@ -1428,7 +1428,7 @@ function Subject() {
           setExtractionProgress(prev => (prev < 40 ? prev + 5 : prev));
         }, 500);
 
-        const response = await fetch('http://localhost:8000/extract', {
+        const response = await fetch('http://localhost:8000/extract/', {
           method: 'POST', body: formData
         });
 
@@ -1561,7 +1561,7 @@ function Subject() {
       formData.append('file', selectedFile);
       formData.append('form_type', selectedFormType);
       formData.append('category', category);
-      return fetch('http://localhost:8000/extract-by-category', { method: 'POST', body: formData })
+      return fetch('http://localhost:8000/extract-by-category/', { method: 'POST', body: formData })
         .then(res => res.ok ? res.json() : Promise.reject(`Failed to extract ${category}`))
         .then(result => ({ category, result }));
     });
@@ -1602,7 +1602,7 @@ function Subject() {
     formData.append('comment', prompt);
 
     try {
-      const res = await fetch('http://localhost:8000/extract', {
+      const res = await fetch('http://localhost:8000/extract/', {
         method: 'POST',
         body: formData,
       });
@@ -1624,10 +1624,14 @@ function Subject() {
 
   // Helper function for API calls with retry logic
   const fetchWithRetry = async (url, options, retries = 3, delay = 1000) => {
+    const timeout = 60000; // 60 seconds timeout
     for (let i = 0; i < retries; i++) {
       try {
-        const res = await fetch(url, options);
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        const res = await fetch(url, { ...options, signal: controller.signal });
         // If response is not a 5xx error, return it
+        clearTimeout(id);
         if (res.status < 500) {
           return res;
         }
@@ -1673,7 +1677,7 @@ function Subject() {
     formData.append('comment', STATE_REQUIREMENTS_PROMPT);
 
     try {
-      const res = await fetchWithRetry('http://localhost:8000/extract', {
+      const res = await fetchWithRetry('http://localhost:8000/extract/', {
         method: 'POST',
         body: formData,
 
@@ -1728,7 +1732,7 @@ function Subject() {
     formData.append('comment', UNPAID_OK_PROMPT);
 
     try {
-      const res = await fetch('http://localhost:8000/extract', {
+      const res = await fetch('http://localhost:8000/extract/', {
         method: 'POST',
         body: formData,
       });
@@ -1782,7 +1786,7 @@ function Subject() {
     formData.append('comment', CLIENT_REQUIREMENT_PROMPT);
 
     try {
-      const res = await fetch('http://localhost:8000/extract', {
+      const res = await fetch('http://localhost:8000/extract/', {
         method: 'POST',
         body: formData,
       });
@@ -1836,7 +1840,7 @@ function Subject() {
     formData.append('comment', FHA_REQUIREMENTS_PROMPT);
 
     try {
-      const res = await fetch('http://localhost:8000/extract', {
+      const res = await fetch('http://localhost:8000/extract/', {
         method: 'POST',
         body: formData,
       });
@@ -1890,7 +1894,7 @@ function Subject() {
     formData.append('comment', ESCALATION_CHECK_PROMPT);
 
     try {
-      const res = await fetch('http://localhost:8000/extract', {
+      const res = await fetch('http://localhost:8000/extract/', {
         method: 'POST',
         body: formData,
       });
@@ -2416,4 +2420,8 @@ function Subject() {
   );
 }
 
+
+
+
 export default Subject;
+

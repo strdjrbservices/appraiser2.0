@@ -7,10 +7,6 @@ import {
   CircularProgress,
   Paper,
   Alert,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Stack,
   Table,
   TableBody,
@@ -43,10 +39,38 @@ const playSound = (soundType) => {
   }
 };
 
+const fetchWithRetry = async (url, options, retries = 3, delay = 1000) => {
+  const timeout = 60000; // 60 seconds timeout
+  for (let i = 0; i < retries; i++) {
+    try {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      const res = await fetch(url, { ...options, signal: controller.signal });
+      clearTimeout(id);
+
+      if (res.status < 500) {
+        return res;
+      }
+      console.warn(`Attempt ${i + 1}: Server error ${res.status}. Retrying in ${delay / 1000}s...`);
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.warn(`Attempt ${i + 1}: Request timed out. Retrying in ${delay / 1000}s...`);
+      } else {
+        console.warn(`Attempt ${i + 1}: Network error. Retrying in ${delay / 1000}s...`, error);
+      }
+    }
+    if (i < retries - 1) {
+      await new Promise(resolve => setTimeout(resolve));
+      delay *= 2; // Exponential backoff
+    }
+  }
+  throw new Error(`Failed to fetch from ${url} after ${retries} attempts.`);
+};
+
 const CustomQuery = () => {
   const [file, setFile] = useState(null);
   const [comment, setComment] = useState('');
-  const [formType, setFormType] = useState('1004'); // Default form type
+  const [formType, ] = useState('1004'); // Default form type
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -73,10 +97,6 @@ const CustomQuery = () => {
     setComment(event.target.value);
   };
 
-  const handleFormTypeChange = (event) => {
-    setFormType(event.target.value);
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!file) {
@@ -98,13 +118,12 @@ const CustomQuery = () => {
     formData.append('comment', comment);
 
     try {
-      const res = await fetch('http://localhost:8000/extract', {
+      const res = await fetchWithRetry('http://localhost:8000/extract/', {
         method: 'POST',
         body: formData,
       });
 
- 
-      const text = await res.text();
+      const text = await res.text(); // res can be undefined if all retries fail
 
       if (!res.ok) {
         throw new Error(text || `HTTP error! status: ${res.status}`);

@@ -232,7 +232,7 @@ const Compare = () => {
     } catch (e) {
       // If the error is a generic network error, show a generic message.
       // Otherwise, show the specific error message from the backend.
-      const errorMessage = e.message.includes('Failed to fetch') ? 'Could not connect to the server. Please ensure it is running.' : e.message;
+      // const errorMessage = e.message.includes('Failed to fetch') ? 'Could not connect to the server. Please ensure it is running.' : e.message;
       console.error('Comparison failed:', e);
     } finally {
       setLoading(false);
@@ -484,7 +484,7 @@ const Compare = () => {
                             'tx': 'texas', 'ut': 'utah', 'vt': 'vermont', 'va': 'virginia', 'wa': 'washington',
                             'wv': 'westvirginia', 'wi': 'wisconsin', 'wy': 'wyoming',
                             // Other common terms
-                            'apt': 'apartment', 'bldg': 'building', 'dept': 'department', 'fl': 'floor',
+                            'apt': 'apartment', 'bldg': 'building', 'dept': 'department',
                             'ste': 'suite', 'unit': 'unit'
                           };
                           // Replace abbreviations using word boundaries to avoid replacing parts of words
