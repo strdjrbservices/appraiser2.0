@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+google-generativeai
+PyPDF2
+beautifulsoup4
+lxml
+streamlit
+
