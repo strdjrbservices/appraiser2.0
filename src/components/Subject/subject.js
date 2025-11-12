@@ -928,7 +928,7 @@ function Subject() {
   ];
 
   const improvementsFields = [
-    "Units","One with Accessory Unit", "# of Stories", "Type", "Existing/Proposed/Under Const.",
+    "Units", "One with Accessory Unit", "# of Stories", "Type", "Existing/Proposed/Under Const.",
     "Design (Style)", "Year Built", "Effective Age (Yrs)", "Foundation Type",
     "Basement Area sq.ft.", "Basement Finish %",
     "Evidence of", "Foundation Walls (Material/Condition)",
@@ -1412,6 +1412,7 @@ function Subject() {
   const callExtractionAPI = async (formType, category, onRetry) => {
     setExtractionProgress(10);
     const retries = 3;
+    let progressInterval;
     const delay = 1000;
 
     for (let i = 0; i < retries; i++) {
@@ -1423,7 +1424,7 @@ function Subject() {
           formData.append('category', category);
         }
 
-        const progressInterval = setInterval(() => {
+        progressInterval = setInterval(() => {
           setExtractionProgress(prev => (prev < 40 ? prev + 5 : prev));
         }, 500);
 
@@ -1446,6 +1447,7 @@ function Subject() {
         setExtractionProgress(90);
         return await response.json();
       } catch (error) {
+        if (progressInterval) clearInterval(progressInterval);
         if (i < retries - 1) {
           const currentDelay = delay * Math.pow(2, i);
           onRetry(i + 1, retries);
@@ -2269,11 +2271,11 @@ function Subject() {
                     )}
 
                     {data['ANSI'] && (
-                      <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5}}>
-                        <Typography variant="body2"  sx={{ fontWeight: 'bold',mr:3 }}>
-                          ANSI:  
+                      <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', mr: 3 }}>
+                          ANSI:
                         </Typography>
-                        <EditableField style={{ maxwidth: 'auto',marginLeft: '30px', marginRight: '30px'}} fieldPath={['ANSI']} value={data['ANSI']} onDataChange={handleDataChange} editingField={editingField} setEditingField={setEditingField} isEditable={isEditable} allData={data} />
+                        <EditableField style={{ maxwidth: 'auto', marginLeft: '30px', marginRight: '30px' }} fieldPath={['ANSI']} value={data['ANSI']} onDataChange={handleDataChange} editingField={editingField} setEditingField={setEditingField} isEditable={isEditable} allData={data} />
                       </Box>
                     )}
 
