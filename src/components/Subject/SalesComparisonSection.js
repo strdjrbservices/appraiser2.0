@@ -39,8 +39,8 @@ const SalesComparisonSection = ({
                 const isHighlighted = row.label === 'Date of Sale/Time';
                 const rowClass = isHighlighted ? 'highlighted-field' : '';
 
-                let mostCommonSource = null;
-                let verificationSourcesInconsistent = false;
+                // let mostCommonSource = null;
+                // let verificationSourcesInconsistent = false;
                 if (row.label === "Verification Source(s)") {
                   const subjectSource = data.Subject?.[row.valueKey];
                   const sources = [subjectSource, ...comparableSales.map(sale => data[sale]?.[row.valueKey])].filter(Boolean);
@@ -49,10 +49,10 @@ const SalesComparisonSection = ({
                       acc[source] = (acc[source] || 0) + 1;
                       return acc;
                     }, {});
-                    mostCommonSource = Object.keys(sourceCounts).reduce((a, b) => sourceCounts[a] > sourceCounts[b] ? a : b);
+                    // mostCommonSource = Object.keys(sourceCounts).reduce((a, b) => sourceCounts[a] > sourceCounts[b] ? a : b);
                     const uniqueSources = new Set(sources);
                     if (uniqueSources.size > 1) {
-                      verificationSourcesInconsistent = true;
+                      // verificationSourcesInconsistent = true;
                     }
                   }
                 }

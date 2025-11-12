@@ -1449,8 +1449,9 @@ function Subject() {
         return await response.json();
       } catch (error) {
         if (i < retries - 1) {
+          const currentDelay = delay * Math.pow(2, i);
           onRetry(i + 1, retries);
-          await new Promise(res => setTimeout(res, delay * Math.pow(2, i)));
+          await new Promise(res => setTimeout(res, currentDelay));
         } else {
           throw error;
         }
