@@ -1368,6 +1368,7 @@ function Subject() {
       });
       setFileUploadTimer(0);
       setIsTimerRunning(true);
+      extractInitialSections(); // Trigger initial extraction
       // We will no longer trigger initial extraction on file change.
       // The user can extract sections via the sidebar.
       // This prevents errors if the API is not ready or if the user
@@ -1553,6 +1554,13 @@ function Subject() {
     }
   };
 
+  const extractInitialSections = async () => {
+    if (!selectedFile || !selectedFormType) return;
+    if (!selectedFile || !selectedFormType) {
+      // Do not proceed if there is no file.
+      // This prevents sending an empty request on page load.
+      return;
+    }
 
     const initialCategories = ['SUBJECT', 'CONTRACT', 'SITE', 'IMPROVEMENTS', 'SALES_GRID'];
     setLoading(true);
@@ -1565,7 +1573,7 @@ function Subject() {
       formData.append('file', selectedFile);
       formData.append('form_type', selectedFormType);
       formData.append('category', category);
-      return fetch('/api/extract-by-category', { method: 'POST', body: formData })
+      return fetch('https://strdjrbservices1.pythonanywhere.com/api/extract-by-category/ ', { method: 'POST', body: formData })
         .then(res => res.ok ? res.json() : Promise.reject(`Failed to extract ${category}`))
         .then(result => ({ category, result }));
     });
