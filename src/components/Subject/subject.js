@@ -1434,7 +1434,7 @@ function Subject() {
           setExtractionProgress(prev => (prev < 40 ? prev + 5 : prev));
         }, 500);
 
-        const response = await fetch('/api/extract', {
+        const response = await fetch('https://strdjrbservices1.pythonanywhere.com/api/extract/', {
           method: 'POST', body: formData
         });
 
@@ -1568,25 +1568,26 @@ function Subject() {
     setTimer(0);
     timerRef.current = setInterval(() => setTimer(prev => prev + 1), 1000);
 
-    const extractionPromises = initialCategories.map(category => {
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-      formData.append('form_type', selectedFormType);
-      formData.append('category', category);
-      return fetch('https://strdjrbservices1.pythonanywhere.com/api/extract-by-category/ ', { method: 'POST', body: formData })
-        .then(res => res.ok ? res.json() : Promise.reject(`Failed to extract ${category}`))
-        .then(result => ({ category, result }));
-    });
+    // Process requests sequentially instead of in parallel to avoid overloading the server.
+    for (const category of initialCategories) {
+      try {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        formData.append('form_type', selectedFormType);
+        formData.append('category', category);
 
-    const results = await Promise.allSettled(extractionPromises);
+        const res = await fetch('https://strdjrbservices1.pythonanywhere.com/api/extract/', { method: 'POST', body: formData });
 
-    results.forEach(p => {
-      if (p.status === 'fulfilled') {
-        processExtractionResult(p.value.result, Date.now(), p.value.category);
-      } else {
-        console.error(p.reason);
+        if (!res.ok) {
+          throw new Error(`Failed to extract ${category}`);
+        }
+
+        const result = await res.json();
+        processExtractionResult(result, Date.now(), category);
+      } catch (error) {
+        console.error(error);
       }
-    });
+    }
 
     setLoading(false);
     if (timerRef.current) clearInterval(timerRef.current);
@@ -1614,7 +1615,7 @@ function Subject() {
     formData.append('comment', prompt);
 
     try {
-      const res = await fetch('/api/extract', {
+      const res = await fetch('https://strdjrbservices1.pythonanywhere.com/api/extract/', {
         method: 'POST',
         body: formData,
       });
@@ -1689,7 +1690,7 @@ function Subject() {
     formData.append('comment', STATE_REQUIREMENTS_PROMPT);
 
     try {
-      const res = await fetchWithRetry('/api/extract', {
+      const res = await fetchWithRetry('https://strdjrbservices1.pythonanywhere.com/api/extract/', {
         method: 'POST',
         body: formData,
 
@@ -1744,7 +1745,7 @@ function Subject() {
     formData.append('comment', UNPAID_OK_PROMPT);
 
     try {
-      const res = await fetch('/api/extract', {
+      const res = await fetch('https://strdjrbservices1.pythonanywhere.com/api/extract/', {
         method: 'POST',
         body: formData,
       });
@@ -1798,7 +1799,7 @@ function Subject() {
     formData.append('comment', CLIENT_REQUIREMENT_PROMPT);
 
     try {
-      const res = await fetch('/api/extract', {
+      const res = await fetch('https://strdjrbservices1.pythonanywhere.com/api/extract/', {
         method: 'POST',
         body: formData,
       });
@@ -1852,7 +1853,7 @@ function Subject() {
     formData.append('comment', FHA_REQUIREMENTS_PROMPT);
 
     try {
-      const res = await fetch('/api/extract', {
+      const res = await fetch('https://strdjrbservices1.pythonanywhere.com/api/extract/', {
         method: 'POST',
         body: formData,
       });
@@ -1906,7 +1907,7 @@ function Subject() {
     formData.append('comment', ESCALATION_CHECK_PROMPT);
 
     try {
-      const res = await fetch('/api/extract', {
+      const res = await fetch('https://strdjrbservices1.pythonanywhere.com/api/extract/', {
         method: 'POST',
         body: formData,
       });
@@ -2431,8 +2432,5 @@ function Subject() {
 
   );
 }
-
-
-
 
 export default Subject;
