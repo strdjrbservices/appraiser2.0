@@ -1368,7 +1368,12 @@ function Subject() {
       });
       setFileUploadTimer(0);
       setIsTimerRunning(true);
-      extractInitialSections(); // Trigger initial extraction
+      // We will no longer trigger initial extraction on file change.
+      // The user can extract sections via the sidebar.
+      // This prevents errors if the API is not ready or if the user
+      // changes their mind.
+      // If you want to restore this, you can call:
+      // extractInitialSections();
     }
   };
 
@@ -1549,7 +1554,11 @@ function Subject() {
   };
 
   const extractInitialSections = async () => {
-    if (!selectedFile || !selectedFormType) return;
+    if (!selectedFile || !selectedFormType) {
+      // Do not proceed if there is no file.
+      // This prevents sending an empty request on page load.
+      return;
+    }
 
     const initialCategories = ['SUBJECT', 'CONTRACT', 'SITE', 'IMPROVEMENTS', 'SALES_GRID'];
     setLoading(true);
