@@ -118,7 +118,7 @@ const CustomQuery = () => {
     formData.append('comment', comment);
 
     try {
-      const res = await fetchWithRetry('/api/extract', {
+      const res = await fetchWithRetry('https://www.pythonanywhere.com/user/strdjrbservices1/api/extract', {
         method: 'POST',
         body: formData,
       });
