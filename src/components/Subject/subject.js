@@ -1553,12 +1553,6 @@ function Subject() {
     }
   };
 
-  const extractInitialSections = async () => {
-    if (!selectedFile || !selectedFormType) {
-      // Do not proceed if there is no file.
-      // This prevents sending an empty request on page load.
-      return;
-    }
 
     const initialCategories = ['SUBJECT', 'CONTRACT', 'SITE', 'IMPROVEMENTS', 'SALES_GRID'];
     setLoading(true);
